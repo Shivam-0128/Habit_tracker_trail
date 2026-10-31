@@ -43,8 +43,9 @@ function LastSevenDays({ habit, onChange }) {
 function Stat({ label, value, testId }) {
   return (
     <div className="rounded-2xl border border-stone-200 bg-white p-6">
-      <p className="text-sm font-semibold text-stone-600">{label}</p>
-      <p data-testid={testId} className="font-heading text-4xl font-bold text-orange-700 mt-1">{value}</p>
+      <p className="text-base font-semibold text-stone-700">
+        {label} <span data-testid={testId} className="font-heading text-3xl font-bold text-orange-700 ml-1">{value}</span>
+      </p>
     </div>
   );
 }
