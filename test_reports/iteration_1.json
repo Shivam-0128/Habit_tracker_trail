@@ -1,0 +1,40 @@
+{
+  "summary": "Full backend (19 pytest) + E2E UI test of Habit Circle. All requested flows work: signup/signin/signout, wrong-password error, top nav + sidebar nav, add habit (share unticked by default, Shared/Private badges, only own habits), habit page 7 local-date checkboxes incl. today, tick/untick updates Days done & Current streak and persists on reload, non-owner disabled checkboxes + 403, private habit 404 & hidden from community, community card shows owner/when/days, comments by other user visible to owner. ONE CRITICAL backend bug: an impossible-but-regex-valid date (e.g. 2026-02-30) is stored by PUT /ticks and then every endpoint that computes streak returns 500 — including GET /api/habits/community for ALL users.",
+  "backend_issues": {
+    "critical": [
+      {"endpoint": "PUT /api/habits/{id}/ticks", "issue": "Date only checked with regex ^\\d{4}-\\d{2}-\\d{2}$. Value like '2026-02-30' or '2026-13-45' is saved to completed_dates, then streak_of() date.fromisoformat raises -> 500 on the tick response and on every later GET /api/habits/{id}, GET /api/habits/mine (owner) and GET /api/habits/community (EVERY user, if habit is shared). One request by any user can break Community for everyone. Fix: validate with date.fromisoformat (try/except -> 400) before writing; optionally restrict to today..today-6 (or not in future). Also make streak_of tolerant of bad data.", "priority": "CRITICAL"}
+    ],
+    "minor": [
+      {"endpoint": "POST /api/auth/login", "issue": "No brute-force lockout (playbook item); acceptable given 'keep simple' but noted."},
+      {"endpoint": "CORS", "issue": "allow_origin_regex='.*' with allow_credentials=True reflects any origin; prefer explicit origins."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "HabitPage Comments", "issue": "Race: initial GET /comments can resolve after a quick POST and overwrite the list with [] so the user's just-posted comment disappears until reload (seen in fast automation; normal pacing works). Fix: functional merge or ignore stale GET.", "selector": "[data-testid=comments-list]", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "All signed-in pages (mobile <768px)", "issues": ["Sidebar is hidden (hidden md:flex), so sidebar buttons required by spec are not present on mobile; top nav still works."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_habit_tracker.py", "/app/test_reports/pytest/pytest_results.xml"],
+  "action_items": [
+    "CRITICAL: validate tick date with date.fromisoformat (400 on invalid) in PUT /api/habits/{id}/ticks; consider limiting to last 7 days and harden streak_of against bad stored values",
+    "Fix comments initial-load vs post race in HabitPage Comments",
+    "Optional: show sidebar (or a drawer) on mobile so sidebar buttons exist on every page"
+  ],
+  "critical_code_review_comments": [
+    "server.py tick endpoint: regex-only date validation leads to persisted invalid data and cascading 500s (see critical).",
+    "Ticks accept any date (future or years ago) via API; UI only shows last 7 days.",
+    "current_user: ObjectId(payload['sub']) would raise 500 if sub is malformed (only with forged-but-signed token; low risk)."
+  ],
+  "updated_files": ["/app/backend/tests/test_habit_tracker.py"],
+  "success_rate": {"backend": "95% (18/19)", "frontend": "100% of requested flows"},
+  "test_credentials": "alice@example.com/alice123 works. Test users created via register with test_*@example.com / secret123.",
+  "seed_data_creation": "Created TEST_ prefixed users/habits/comments. Manually removed 2 invalid completed_dates from DB (created by my test reproducing the bug) because they broke /api/habits/community for everyone.",
+  "retest_needed": true,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Run: REACT_APP_BACKEND_URL=... pytest /app/backend/tests/test_habit_tracker.py. test_impossible_date_does_not_break_habit should pass after fix (NOTE: until fixed, running it pollutes DB and breaks community; clean completed_dates). Browser timezone in test env showed 2026-10-31.",
+  "rca of the issue": "DATE_RE only checks shape; $addToSet stores '2026-02-30'; habit_out -> streak_of -> date.fromisoformat ValueError -> unhandled 500. Community lists all shared habits through habit_out so a single bad habit fails the whole list. Repro: register, create shared habit, PUT /ticks {date:'2026-02-30',done:true} -> 500; GET /api/habits/community -> 500. Mitigation: parse date strictly before update."
+}

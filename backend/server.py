@@ -235,7 +235,11 @@ async def tick(habit_id: str, body: TickIn, user: User = Depends(current_user)):
     h = await get_visible_habit(habit_id, user)
     if h.owner_id != user.id:
         raise HTTPException(403, "Only the owner can change this habit")
-    if not DATE_RE.match(body.date):
+    try:
+        if not DATE_RE.match(body.date):
+            raise ValueError
+        date.fromisoformat(body.date)
+    except ValueError:
         raise HTTPException(400, "Invalid date")
     op = "$addToSet" if body.done else "$pull"
     await db.habits.update_one({"_id": ObjectId(h.id)}, {op: {"completed_dates": body.date}})

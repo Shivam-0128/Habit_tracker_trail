@@ -55,7 +55,9 @@ function Comments({ habitId }) {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    api.get(`/habits/${habitId}/comments`).then((r) => setComments(r.data)).catch(() => {});
+    api.get(`/habits/${habitId}/comments`)
+      .then((r) => setComments((cur) => [...r.data, ...cur.filter((c) => !r.data.some((x) => x.id === c.id))]))
+      .catch(() => {});
   }, [habitId]);
 
   const post = async (e) => {
