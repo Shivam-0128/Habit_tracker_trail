@@ -1,0 +1,96 @@
+{
+  "theme_archetype": "Organic & Earthy (Archetype 1)",
+  "typography": {
+    "headings_font": "Outfit",
+    "body_font": "Manrope",
+    "hierarchy": {
+      "h1": "text-4xl sm:text-5xl font-bold tracking-tight text-stone-900",
+      "h2": "text-2xl sm:text-3xl font-semibold tracking-tight text-stone-800",
+      "h3": "text-xl sm:text-2xl font-medium text-stone-800",
+      "body": "text-base leading-relaxed text-stone-600",
+      "labels": "text-xs font-bold uppercase tracking-[0.2em] text-stone-500"
+    }
+  },
+  "colors": {
+    "background": "bg-stone-50",
+    "surface": "bg-white",
+    "surface_secondary": "bg-stone-100",
+    "primary": "bg-orange-600",
+    "primary_hover": "bg-orange-700",
+    "text_main": "text-stone-900",
+    "text_muted": "text-stone-500",
+    "border": "border-stone-200",
+    "success": "text-emerald-700 bg-emerald-50 border-emerald-200",
+    "glass": "bg-white/70 backdrop-blur-xl border-stone-200/50"
+  },
+  "visual_enhancers": {
+    "shadows": "shadow-[0_2px_8px_rgba(0,0,0,0.04)]",
+    "radius": "rounded-2xl",
+    "glassmorphism": "backdrop-blur-xl bg-white/70 border-b border-stone-200/50",
+    "neumorphism_subtle": "shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]"
+  },
+  "component_guidelines": {
+    "buttons": "Pill-shaped (rounded-full). Primary buttons use bg-orange-600 hover:bg-orange-700 text-white transition-colors. Secondary use bg-stone-100 hover:bg-stone-200 text-stone-900.",
+    "cards": "Flat solid background (bg-white), rounded-2xl, border border-stone-200, generous padding (p-6 to p-8). Hover states include -translate-y-1 and shadow-lg.",
+    "inputs": "Customized Shadcn inputs: rounded-xl, bg-stone-50 focus:bg-white focus:ring-2 focus:ring-orange-200 border-stone-200.",
+    "checkboxes": "Large tap targets (h-6 w-6), rounded-md. Checked state bg-orange-600.",
+    "navigation": "Sidebar on desktop (w-64, bg-stone-100 border-r border-stone-200). Top nav handles mobile menu and Sign Out. Mobile nav uses glassmorphism if sticky."
+  },
+  "grids_layouts": {
+    "app_layout": "flex h-screen overflow-hidden bg-stone-50. Sidebar fixed left (hidden on mobile). Main content flex-1 overflow-y-auto.",
+    "page_container": "max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12",
+    "habit_list": "grid grid-cols-1 gap-6",
+    "habit_detail": "grid grid-cols-1 lg:grid-cols-3 gap-8. Main content (col-span-2) for 7-day checkboxes and comments. Sidebar (col-span-1) for stats (Days done, Streak).",
+    "bento_stats": "grid grid-cols-2 gap-4"
+  },
+  "motion": {
+    "list_stagger": "Framer-motion staggered entrance. Parent: staggerChildren 0.1s. Child: y: 20, opacity: 0 to y: 0, opacity: 1.",
+    "hover_states": "transition-transform duration-200 ease-out hover:-translate-y-1",
+    "checkbox_check": "Scale bounce on check: scale 0.9 -> 1.1 -> 1.0."
+  },
+  "accessibility": {
+    "focus_states": "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-orange-500",
+    "contrast": "Ensure text-stone-500 meets APCA standards against stone-50. Use text-stone-600 if needed.",
+    "aria_labels": "All icon-only buttons must have aria-label.",
+    "data_testid": "Mandatory on all interactive elements (e.g., data-testid='add-habit-btn', data-testid='habit-checkbox-2026-07-01', data-testid='post-comment-btn')."
+  },
+  "media": {
+    "image_urls": [
+      {
+        "url": "https://images.unsplash.com/photo-1601642964568-1917224f4e4d?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1MDV8MHwxfHNlYXJjaHwxfHxjYWxtJTIwbWluaW1hbCUyMGRlc2slMjBjb2ZmZWUlMjBtb3JuaW5nfGVufDB8fHx8MTc5MzQ3Mzg4NXww&ixlib=rb-4.1.0&q=85",
+        "category": "Auth Page Background",
+        "description": "Calm, minimal desk with sunlight. Use on the right half of a split-screen desktop Auth layout to evoke calm productivity and morning habits."
+      }
+    ]
+  },
+  "libraries": {
+    "icons": "lucide-react",
+    "motion": "framer-motion",
+    "components": "shadcn/ui primitives",
+    "toast": "sonner",
+    "date": "date-fns"
+  },
+  "instructions_to_main_agent": [
+    "Do not use generic centered layouts or simplistic gradients.",
+    "Apply 'Generous Spacing' (p-6, p-8) everywhere to ensure the UI feels premium and uncluttered.",
+    "Implement the layout with a persistent Sidebar on desktop, and a top nav layout.",
+    "Never use generic 'Inter' or 'Roboto' for headings. Use Outfit for headings and Manrope for body text.",
+    "Customise Shadcn components to match the 'Organic & Earthy' theme (rounded-2xl, warm stone colors, terracotta CTA).",
+    "All interactive elements must include a kebab-case data-testid attribute.",
+    "For the 7-day checkboxes, render them prominently with Date labels (YYYY-MM-DD), ensuring large clickable areas.",
+    "Keep it simple and focused: do not add features outside the problem statement.",
+    "Use Framer Motion to stagger the entrance of Habit cards and comments.",
+    "Use javascript (.js / .jsx), DO NOT output typescript (.ts / .tsx)."
+  ],
+  "UNIVERSAL GUIDELINES FOR MAIN AGENT": [
+    "Avoid the 'AI slop' aesthetic: no generic centered layouts, uniform styling, or default SaaS blues.",
+    "Use 2-3x more spacing than feels comfortable. Cramped designs look cheap.",
+    "Ensure crisp edges via semi-transparent borders and nested radii.",
+    "DO NOT apply universal transition (transition: all). Use specific properties (transition-colors, transition-transform).",
+    "DO NOT center align the app container in CSS (.App { text-align: center; } is banned).",
+    "Never use AI assistant emojis for icons.",
+    "Prioritize pre-existing components in src/components/ui.",
+    "Use Sonner for toast notifications.",
+    "Use glass-morphism effects carefully with backdrop-blur-xl and a subtle border; NEVER use a fully transparent header."
+  ]
+}
